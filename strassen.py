@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import time
 
 N = 717
 
@@ -17,21 +18,43 @@ def main():
     if flag == 1:
         X = np.random.randint(2, size=(n, n))
         Y = np.random.randint(2, size=(n, n))
+        
+    if flag == 2:
+        for i in range(260, 1001, 10):
+            X = np.random.randint(2, size=(i, i))
+            Y = np.random.randint(2, size=(i, i))
+            start = time.time()
+            s = strassen(X,Y)
+            end = time.time()
+            stime = end - start
+            start = time.time()
+            m = strassen(X,Y)
+            end = time.time()
+            mtime = end - start
+            cross = ""
+            if not np.array_equal(s,m):
+                print("MAYDAY")
+                break
+            if mtime > stime:
+                cross = "matrix slower"
+            print("n = " + str(i) + " s: " + str(stime) + " m: " + str(mtime) + " " + cross)
 
-    s=strassen(X,Y)
+
+
+    # s=strassen(X,Y)
     # m=naive_mat_mul(X,Y)
     # print(s)
     # print(m)
     # print(np.array_equal(s,m))
-    for i in range(n): 
-        print(s[i, i])
+    # for i in range(n): 
+    #    print(s[i, i])
 
 
 def strassen(X, Y):
 
     n = len(X)
 
-    if n <= N:
+    if n <= 1:
         return naive_mat_mul(X,Y)
     
     padded = False
