@@ -4,33 +4,34 @@ import numpy as np
 N = 717
 
 def main(): 
-    print ('argument list', sys.argv)
     if len(sys.argv) != 4:
         print('bad cli')
     flag = int(sys.argv[1])
     n = int(sys.argv[2])
 
     if flag == 0:
-        input = sys.argv[3]
+        with open(sys.argv[3], "r") as input:
+            values = [int(line.strip()) for line in input]
+        X = np.array(values[:n**2]).reshape((n,n))
+        Y = np.array(values[n**2:]).reshape(n,n)
     if flag == 1:
         X = np.random.randint(2, size=(n, n))
         Y = np.random.randint(2, size=(n, n))
 
-    print(X)
-    print(Y)
-
     s=strassen(X,Y)
-    m=naive_mat_mul(X,Y)
-    print(s)
-    print(m)
-    print(np.array_equal(s,m))
+    # m=naive_mat_mul(X,Y)
+    # print(s)
+    # print(m)
+    # print(np.array_equal(s,m))
+    for i in range(n): 
+        print(s[i, i])
 
 
 def strassen(X, Y):
 
     n = len(X)
 
-    if n <= 1:
+    if n <= N:
         return naive_mat_mul(X,Y)
     
     padded = False
