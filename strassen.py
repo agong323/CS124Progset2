@@ -1,7 +1,8 @@
 import sys
 import numpy as np
 
-N = 717
+N_odd = 31
+N_even = 14
 
 def main(): 
     if len(sys.argv) != 4:
@@ -30,16 +31,18 @@ def main():
 def strassen(X, Y):
 
     n = len(X)
-
-    if n <= N:
-        return naive_mat_mul(X,Y)
-    
+        
     padded = False
     if n % 2 == 1:
+        if n <= N_odd:
+            return naive_mat_mul(X,Y)
         padded = True
         X = np.pad(X, ((0,1),(0,1)), mode='constant')
         Y = np.pad(Y, ((0,1),(0,1)), mode='constant')
         n += 1
+    else:
+        if n <= N_even:
+            return naive_mat_mul(X,Y)
 
     A = X[:n//2, :n//2]
     B = X[:n//2, n//2:]
@@ -65,6 +68,8 @@ def strassen(X, Y):
         final = final[:-1,:-1]
     
     return final
+
+
 
 def naive_mat_mul(X,Y):
     n = len(X)
