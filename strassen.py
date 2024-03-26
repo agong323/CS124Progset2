@@ -1,5 +1,7 @@
 import sys
 import numpy as np
+import random
+import math
 
 N_odd = 31
 N_even = 14
@@ -10,22 +12,37 @@ def main():
     flag = int(sys.argv[1])
     n = int(sys.argv[2])
 
-    if flag == 0:
+    if flag == 0: #normal
         with open(sys.argv[3], "r") as input:
             values = [int(line.strip()) for line in input]
         X = np.array(values[:n**2]).reshape((n,n))
         Y = np.array(values[n**2:]).reshape(n,n)
-    if flag == 1:
+    if flag == 1: #testing with random values 
         X = np.random.randint(2, size=(n, n))
         Y = np.random.randint(2, size=(n, n))
+    if flag == 2: #triangle
+        for i in range(5):
+            p = (i + 1)/100
+            A = createA(1024, p)
+            expected = math.comb(1024, 3) * (p ** 3)
+            triangles = 0
+            Asqaured = strassen(A,A)
+            Acubed = strassen(Asqaured, A)
+            for i in range(1024):
+                triangles += Acubed[i,i]
+            triangles /= 6
+            print("p: " + str(p) + " experimental: " + str(triangles) + " expected: " + str(expected))
+    
+    
 
-    s=strassen(X,Y)
-    # m=naive_mat_mul(X,Y)
-    # print(s)
-    # print(m)
-    # print(np.array_equal(s,m))
-    for i in range(n): 
-        print(s[i, i])
+def createA(n, p):
+    A = np.zeros((n,n), dtype=int)
+    for i in range(n):
+        for j in range(i, n):
+            if random.random() <= p:
+                A[i,j] = 1
+                A[j,i] = 1
+    return A
 
 
 def strassen(X, Y):
