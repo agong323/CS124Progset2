@@ -23,15 +23,25 @@ def main():
     if flag == 2: #triangle
         for i in range(5):
             p = (i + 1)/100
-            A = createA(1024, p)
-            expected = math.comb(1024, 3) * (p ** 3)
-            triangles = 0
-            Asqaured = strassen(A,A)
-            Acubed = strassen(Asqaured, A)
-            for j in range(1024):
-                triangles += Acubed[j,j]
-            triangles /= 6
-            print("p: " + str(p) + " experimental: " + str(triangles) + " expected: " + str(expected))
+            print(p)
+            exp_av = 0
+            expected_av = 0
+            count = 0
+            for trial in range(5):
+                A = createA(1024, p)
+                expected = math.comb(1024, 3) * (p ** 3)
+                triangles = 0
+                Asqaured = strassen(A,A)
+                Acubed = strassen(Asqaured, A)
+                for j in range(1024):
+                    triangles += Acubed[j,j]
+                triangles /= 6
+                exp_av += triangles
+                expected_av += expected
+                count += 1
+                print("p: " + str(p) + " experimental: " + str(triangles) + " expected: " + str(expected))
+            print("p: " + str(p) + " experimental: " + str(exp_av/count) + " expected: " + str(expected_av/count))
+
     if flag == 3: #triangle
         i = 0
         p = (i + 1)/100
