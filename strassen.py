@@ -28,17 +28,29 @@ def main():
             triangles = 0
             Asqaured = strassen(A,A)
             Acubed = strassen(Asqaured, A)
-            for i in range(1024):
-                triangles += Acubed[i,i]
+            for j in range(1024):
+                triangles += Acubed[j,j]
             triangles /= 6
             print("p: " + str(p) + " experimental: " + str(triangles) + " expected: " + str(expected))
-    
+    if flag == 3: #triangle
+        i = 0
+        p = (i + 1)/100
+        A = createA(n, p)
+        expected = math.comb(n, 3) * (p ** 3)
+        triangles = 0
+        Asqaured = strassen(A,A)
+        Acubed = strassen(Asqaured, A)
+        for j in range(n):
+            triangles += Acubed[j,j]
+        triangles /= 6
+        print("p: " + str(p) + " experimental: " + str(triangles) + " expected: " + str(expected))
+
     
 
 def createA(n, p):
     A = np.zeros((n,n), dtype=int)
     for i in range(n):
-        for j in range(i, n):
+        for j in range(i+1, n):
             if random.random() <= p:
                 A[i,j] = 1
                 A[j,i] = 1
