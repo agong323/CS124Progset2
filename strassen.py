@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import random
 import math
+import matplotlib.pyplot as plt
 
 N_odd = 31
 N_even = 14
@@ -21,15 +22,15 @@ def main():
         X = np.random.randint(2, size=(n, n))
         Y = np.random.randint(2, size=(n, n))
     if flag == 2: #triangle
-        for i in range(5):
-            p = (i + 1)/100
+        expected_avgs = []
+        experimental_avgs = []
+        for p in [0.01, 0.02, 0.03, 0.04, 0.05]:
             print(p)
             exp_av = 0
-            expected_av = 0
+            expected_avgs.append(math.comb(1024, 3) * (p ** 3))
             count = 0
             for trial in range(5):
                 A = createA(1024, p)
-                expected = math.comb(1024, 3) * (p ** 3)
                 triangles = 0
                 Asqaured = strassen(A,A)
                 Acubed = strassen(Asqaured, A)
@@ -37,10 +38,31 @@ def main():
                     triangles += Acubed[j,j]
                 triangles /= 6
                 exp_av += triangles
-                expected_av += expected
-                count += 1
-                print("p: " + str(p) + " experimental: " + str(triangles) + " expected: " + str(expected))
-            print("p: " + str(p) + " experimental: " + str(exp_av/count) + " expected: " + str(expected_av/count))
+            exp_av /= 5
+            experimental_avgs.append(exp_av)
+        # Create the histogram using Matplotlib
+        plt.figure(figsize=(10, 6))
+        bar_width = 0.35
+        index = [i for i in range(len(expected_avgs))]
+
+        # Plotting bars for expected and experimental averages
+        plt.bar(index, expected_avgs, bar_width, label='Expected')
+        plt.bar([i + bar_width for i in index], experimental_avgs, bar_width, label='Experimental')
+
+        # Labeling the x-axis
+        plt.xlabel('Probability (p)')
+        plt.xticks([i + bar_width / 2 for i in index], ['0.01', '0.02', '0.03', '0.04', '0.05'])
+
+        # Labeling the y-axis
+        plt.ylabel('Average Values')
+        plt.title('Expected vs Experimental Averages')
+
+        # Adding legend
+        plt.legend()
+
+        # Show the plot
+        plt.tight_layout()
+        plt.show()
 
     if flag == 3: #triangle
         i = 0
